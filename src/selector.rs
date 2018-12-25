@@ -7,7 +7,7 @@ pub type Selector<State, Selected> = fn(&State) -> Selected;
 ///
 /// # Example
 /// ```
-/// # use redux_bundler_rs::selector::{ Selector };
+/// # use redux_bundler_rs::{ Selector };
 /// # use redux_bundler_rs::create_selector;
 /// struct Person {
 ///     age: u8,
