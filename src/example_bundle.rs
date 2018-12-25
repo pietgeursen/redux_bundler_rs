@@ -38,8 +38,8 @@ pub fn react_needs_reset(state: &CounterState) -> Option<Action> {
 
 #[cfg(test)]
 mod tests {
-    use crate::example_bundle::*;
     use crate::bundle::*;
+    use crate::example_bundle::*;
     use crate::redux::*;
     #[test]
     fn create_a_bundle() {
@@ -55,7 +55,7 @@ mod tests {
 
         assert_eq!(bundle.state.count, 5);
 
-        bundle.subscribe(|state|{
+        bundle.subscribe(|state| {
             assert!(state.count == 10 || state.count == 0);
         });
 

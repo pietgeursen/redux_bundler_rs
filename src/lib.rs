@@ -1,19 +1,19 @@
 mod bundle;
-mod example_bundle;
-mod selector;
 mod reactor;
-mod state;
 mod redux;
+mod selector;
+mod state;
+
+mod example_bundle;
 
 pub use self::bundle::*;
-pub use self::selector::*;
 pub use self::reactor::*;
-pub use self::state::*;
 pub use self::redux::*;
+pub use self::selector::*;
+pub use self::state::*;
 
 #[cfg(test)]
 mod tests {
     #[test]
-    fn selector() {
-    }
+    fn selector() {}
 }
