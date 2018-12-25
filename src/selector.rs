@@ -1,6 +1,5 @@
 /// `Selector` is a function that takes a reference to some type and returns some new type.
 pub type Selector<State, Selected> = fn(&State) -> Selected;
-pub type Reactor<State, Action> = Selector<State, Option<Action>>;
 
 /// `create_selector` is conceptually the same as the [reselect `create_selector`](https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc) **except**:
 /// - the result func is the first argument (not the last), followed by the input selectors.

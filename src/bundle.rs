@@ -1,15 +1,26 @@
 use crate::state::State;
-use crate::selector::Reactor;
+use crate::reactor::Reactor;
+use crate::redux::*;
 
 pub struct Bundle<S: State> {
     pub state: S,
-    pub reactors: Vec<Reactor<S, S::Action>>
+    pub reactors: Vec<Reactor<S, S::Action>>,
+    pub subscribers: Vec<Subscriber<S>>
 }
 
-impl<S: State> Bundle<S> {
+impl<S: State> Redux<S> for Bundle<S> {
 
-    pub fn dispatch(&mut self, action: &S::Action) {
+    fn get_state(&mut self) -> &S {
+        &self.state
+    }
+
+    fn dispatch(&mut self, action: &S::Action) {
+
         self.state.apply(&action);
+
+        self.subscribers
+            .iter()
+            .for_each(|subscriber| subscriber(&self.state));
 
         let actions: Vec<_> = self.reactors
             .iter()
@@ -18,12 +29,18 @@ impl<S: State> Bundle<S> {
             })
             .collect();
 
-        for action in actions {
-            match action {
-                Some(a) => self.dispatch(&a),
-                _ => ()
-            }
-        }
+        actions
+            .iter()
+            .for_each(|action|{
+                match action {
+                    Some(a) => self.dispatch(&a),
+                    _ => ()
+                }
+            })
             
+    }
+
+    fn subscribe(&mut self, subscriber: Subscriber<S>){
+        self.subscribers.push(subscriber);
     }
 }

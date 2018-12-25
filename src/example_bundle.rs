@@ -1,4 +1,3 @@
-use crate::selector::Reactor;
 use crate::state::State;
 
 pub enum Action {
@@ -41,7 +40,7 @@ pub fn react_needs_reset(state: &CounterState) -> Option<Action> {
 mod tests {
     use crate::example_bundle::*;
     use crate::bundle::*;
-    use crate::state::*;
+    use crate::redux::*;
     #[test]
     fn create_a_bundle() {
         let initial_state = CounterState { count: 0 };
@@ -49,15 +48,19 @@ mod tests {
         let mut bundle = Bundle {
             state: initial_state,
             reactors: vec![react_needs_reset],
+            subscribers: vec![],
         };
 
         bundle.dispatch(&Action::Increment(5));
 
         assert_eq!(bundle.state.count, 5);
 
+        bundle.subscribe(|state|{
+            assert!(state.count == 10 || state.count == 0);
+        });
+
         bundle.dispatch(&Action::Increment(5));
 
         assert_eq!(bundle.state.count, 0);
     }
-
 }
