@@ -4,7 +4,7 @@ mod redux;
 mod selector;
 mod state;
 
-mod example_bundle;
+pub mod example_bundle;
 
 pub use self::bundle::*;
 pub use self::reactor::*;

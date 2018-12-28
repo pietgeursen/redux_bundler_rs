@@ -7,7 +7,7 @@ pub enum Action {
 }
 
 pub struct CounterState {
-    count: isize,
+    pub count: isize,
 }
 
 impl State for CounterState {
@@ -55,12 +55,13 @@ mod tests {
 
         assert_eq!(bundle.state.count, 5);
 
-        bundle.subscribe(|state| {
+        bundle.subscribe(Box::new(|state| {
             assert!(state.count == 10 || state.count == 0);
-        });
+        }));
 
         bundle.dispatch(&Action::Increment(5));
 
         assert_eq!(bundle.state.count, 0);
     }
+
 }

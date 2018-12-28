@@ -1,6 +1,6 @@
 use crate::state::State;
 
-pub type Subscriber<State> = fn(&State) -> ();
+pub type Subscriber<State> = Box<Fn(&State)->() >;
 
 pub trait Redux<S: State> {
     fn dispatch(&mut self, action: &S::Action);
