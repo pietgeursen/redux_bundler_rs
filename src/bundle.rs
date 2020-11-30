@@ -1,10 +1,11 @@
 use crate::reactor::Reactor;
 use crate::redux::*;
 use crate::state::State;
+use std::sync::Arc;
 
 pub struct Bundle<S: State> {
-    pub state: S,
-    pub reactors: Vec<Reactor<S, S::Action>>,
+    pub state: Arc<S>,
+    pub reactors: Vec<Box<dyn Reactor<S>>>,
     pub subscribers: Vec<Subscriber<S>>,
 }
 
@@ -14,7 +15,9 @@ impl<S: State> Redux<S> for Bundle<S> {
     }
 
     fn dispatch(&mut self, action: &S::Action) {
-        self.state.apply(&action);
+        Arc::<S>::get_mut(& mut self.state).unwrap().apply(&action);
+         
+        let state = self.state.clone();
 
         self.subscribers
             .iter()
@@ -22,8 +25,8 @@ impl<S: State> Redux<S> for Bundle<S> {
 
         let actions: Vec<_> = self
             .reactors
-            .iter()
-            .map(|reactor| reactor(&self.state))
+            .iter_mut()
+            .map(|reactor| reactor.apply(&state))
             .collect();
 
         actions.iter().for_each(|action| match action {

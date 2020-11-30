@@ -47,7 +47,7 @@ mod tests {
 
         let mut bundle = Bundle {
             state: initial_state,
-            reactors: vec![react_needs_reset],
+            reactors: vec![Box::new(react_needs_reset)],
             subscribers: vec![],
         };
 
